@@ -12,10 +12,10 @@ const ResultCard = ({ member }) => {
         return dob;
     };
 
-    // Format phone for display (010-XXXX-XXXX)
+    // Format phone for display (010-****-XXXX) - middle 4 digits masked for privacy
     const formatPhone = (p) => {
         if (p && p.length === 11) {
-            return `${p.slice(0, 3)}-${p.slice(3, 7)}-${p.slice(7)}`;
+            return `${p.slice(0, 3)}-****-${p.slice(7)}`;
         }
         return p;
     };
