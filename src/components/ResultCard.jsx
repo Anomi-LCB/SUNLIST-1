@@ -2,7 +2,7 @@
 import React from 'react';
 
 const ResultCard = ({ member }) => {
-    const { display_name, birthdate, phone, team } = member;
+    const { display_name, birthdate, age, team } = member;
 
     // Format birthdate for display (YYYY.MM.DD) if possible
     const formatDob = (dob) => {
@@ -10,14 +10,6 @@ const ResultCard = ({ member }) => {
             return `${dob.slice(0, 4)}.${dob.slice(4, 6)}.${dob.slice(6)}`;
         }
         return dob;
-    };
-
-    // Format phone for display (010-****-XXXX) - middle 4 digits masked for privacy
-    const formatPhone = (p) => {
-        if (p && p.length === 11) {
-            return `${p.slice(0, 3)}-****-${p.slice(7)}`;
-        }
-        return p;
     };
 
     // Generate a color based on the team number
@@ -76,8 +68,8 @@ const ResultCard = ({ member }) => {
                         <span className="value">{formatDob(birthdate)}</span>
                     </div>
                     <div className="info-row">
-                        <span className="label">전화번호</span>
-                        <span className="value">{formatPhone(phone)}</span>
+                        <span className="label">나이</span>
+                        <span className="value">{age}세</span>
                     </div>
                 </div>
 

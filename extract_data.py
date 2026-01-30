@@ -4,13 +4,9 @@ import json
 import re
 import os
 
-INPUT_FILE = r'c:\Users\user\Desktop\AG\명부검색\26.1.25 목포사랑의교회 명부 10개팀.xlsx'
-OUTPUT_DIR = r'c:\Users\user\Desktop\AG\명부검색\src'
+INPUT_FILE = r'c:\Users\user\Desktop\AG\명부검색 - 복사본 (2)\2026.2.1 선거인명부(3,887명)_최종.xlsx'
+OUTPUT_DIR = r'c:\Users\user\Desktop\AG\명부검색 - 복사본 (2)\src'
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'data.json')
-
-def clean_phone(val):
-    if pd.isna(val): return ""
-    return re.sub(r'[^0-9]', '', str(val))
 
 def clean_date(val):
     if pd.isna(val): return ""
@@ -37,7 +33,7 @@ def main():
     df = pd.read_excel(INPUT_FILE)
     
     # Map expected columns
-    # We found: '이름', '생년월일', '휴대전화', '팀'
+    # We found: '이름', '생년월일', '나이', '팀'
     # Let's be safe and strip whitespace from columns
     df.columns = df.columns.str.strip()
     
@@ -46,7 +42,7 @@ def main():
     for _, row in df.iterrows():
         name_val = row.get('이름')
         dob_val = row.get('생년월일')
-        phone_val = row.get('휴대전화')
+        age_val = row.get('나이')
         team_val = row.get('팀')
         
         # Skip empty rows if name is missing
@@ -58,9 +54,17 @@ def main():
         original_name_str = str(name_val).strip()
         parts = re.split(r'\s+OR\s+|\s+or\s+|\s*,\s*|\s*/\s*', original_name_str)
         
-        phone_clean = clean_phone(phone_val)
         dob_clean = clean_date(dob_val)
         team_str = str(team_val).strip() if not pd.isna(team_val) else ""
+        
+        # Handle Age
+        age_str = ""
+        if not pd.isna(age_val):
+            # If it's a number (float/int), convert to int then string
+            try:
+                age_str = str(int(float(age_val)))
+            except:
+                age_str = str(age_val).strip()
         
         for part in parts:
             part = part.strip()
@@ -74,7 +78,7 @@ def main():
                 "display_name": part,
                 "search_names": [search_name], # Still keeping list format for compatibility
                 "birthdate": dob_clean,
-                "phone": phone_clean,
+                "age": age_str,
                 "team": team_str
             })
         

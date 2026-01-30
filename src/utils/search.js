@@ -40,8 +40,11 @@ export const searchMembers = (query, data) => {
 
     if (cleanQuery.length === 0) return [];
 
+    // Lowercase query for case-insensitive search
+    const lowerQuery = cleanQuery.toLowerCase();
+
     return data.filter(person => {
-        // 1. Phone number search
+        // 1. Numeric search (Birthdate)
         const isNumeric = /^\d+$/.test(cleanQuery);
 
         if (isNumeric) {
@@ -50,19 +53,19 @@ export const searchMembers = (query, data) => {
                 if (person.birthdate.includes(cleanQuery)) return true;
                 if (cleanQuery.length === 6 && person.birthdate.slice(2).includes(cleanQuery)) return true;
             }
-
-            // Phone search
-            if (person.phone.includes(cleanQuery)) return true;
         }
 
         // 2. Name search
         for (const sName of person.search_names) {
-            // Exact/Partial string match
-            if (sName.includes(cleanQuery)) return true;
+            // Exact/Partial string match (Case-Insensitive)
+            if (sName.toLowerCase().includes(lowerQuery)) return true;
 
             // Chosung match
             // We calculate Chosung of the name on the fly. 
             const chosungName = getChosung(sName);
+            // Check chosung against query (for Hangul) or lowercased query if needed, 
+            // but usually chosung is for Hangul. For consistency, we can check original query vs chosung.
+            // If the query was purely English/lower, it wouldn't match Hangul chosung anyway.
             if (chosungName.includes(cleanQuery)) return true;
         }
 
