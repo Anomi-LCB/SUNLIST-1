@@ -2,15 +2,7 @@
 import React from 'react';
 
 const ResultCard = ({ member }) => {
-    const { display_name, birthdate, age, team } = member;
-
-    // Format birthdate for display (YYYY.MM.DD) if possible
-    const formatDob = (dob) => {
-        if (dob.length === 8) {
-            return `${dob.slice(0, 4)}.${dob.slice(4, 6)}.${dob.slice(6)}`;
-        }
-        return dob;
-    };
+    const { display_name, age, team } = member;
 
     // Generate a color based on the team number
     const getTeamColor = (teamStr) => {
@@ -63,10 +55,7 @@ const ResultCard = ({ member }) => {
                         <span className="label">이름</span>
                         <span className="value">{display_name}</span>
                     </div>
-                    <div className="info-row">
-                        <span className="label">생년월일</span>
-                        <span className="value">{formatDob(birthdate)}</span>
-                    </div>
+                    {/* Birthdate removed as requested */}
                     <div className="info-row">
                         <span className="label">나이</span>
                         <span className="value">{age}세</span>
